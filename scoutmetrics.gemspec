@@ -9,7 +9,8 @@ Gem::Specification.new do |s|
   s.description = 'Ruby wrapper for the Scout Metrics API'
   s.authors = ['Dosty Everts']
   s.email = 'dosty@mustwin.com'
-  s.files = %w(lib/scoutmetrics.rb lib/scoutmetrics/configuration.rb lib/scoutmetrics/engagement.rb lib/scoutmetrics/request.rb lib/scoutmetrics/user.rb)
+  #s.files = %w(lib/scoutmetrics.rb lib/scoutmetrics/configuration.rb lib/scoutmetrics/engagement.rb lib/scoutmetrics/request.rb lib/scoutmetrics/user.rb)
+  s.files = `git ls-files`.split("\n")
   s.homepage = 'https://github.com/MustWin/scoutmetrics-ruby-gem'
   s.license = 'MIT'
   #s.add_development_dependency('rake', '~> 0.9.2.2')
