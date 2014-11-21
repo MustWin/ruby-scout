@@ -22,7 +22,8 @@ When you sign up on Scout Metrics your site will be assigned a token, configure 
 ```ruby
 ScoutMetrics.configure do |config|
   config.access_token = MY_ACCESS_TOKEN
-end```
+end
+```
 
 ### User API (found in `/lib/scoutmetrics/user.rb`)
 To tell us a user has signed up
@@ -32,7 +33,8 @@ Or if you wanted to backfill signups
 ```ruby
 User.each do |user|
   ScoutMetrics::User.create(user.id, user.created_at)
-end```
+end
+```
 
 To tell us about their latest login (so we can track retention for you)
 `ScoutMetrics::User.update(user.id)`
