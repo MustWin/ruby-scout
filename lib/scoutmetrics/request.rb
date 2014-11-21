@@ -8,12 +8,15 @@ module ScoutMetrics
 
     def initialize(method, route, params)
       params[:token] = ScoutMetrics.access_token
+
+      return if params[:token].nil? || params[:token].empty?
+
       route = "#{DOMAIN}#{route}"
       puts "METHOD: #{method}"
       puts "ROUTE: #{route}"
       puts 'PARAMS'
       puts params
-      response = HTTP.send(method, route, json: params)
+      HTTP.send(method, route, json: params)
     end
 
   end
