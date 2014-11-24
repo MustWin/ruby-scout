@@ -2,53 +2,47 @@ module ScoutMetrics
 
   class User
 
-    # Adds an "AppUser" to Scout Metrics
-    #
-    # @param id [Integer] Uniquely identifies user
-    # @param signup_date [DateTime] Date the user signed up, defaults to now
-    #
-    # @return [Json] Returns a msg for the transaction and the status of the request
-    # @return msg explanation of outcome
-    def self.create(id, signup_date=nil)
-      signup_date ||= Time.new
-      post_update(id, { signup_date: signup_date })
+    attr_accesor :id,  :signup_date, :return_date, :active
+
+    # Create a User record with the id passed in for posting to Scout Metrics
+    def self.find(id)
+      new(id: id)
     end
 
-    # Update an "AppUser" on Scout Metrics
-    #
-    # @param id [Integer] Uniquely identifies user
-    # @param return_date [DateTime] Latest time returning to your site, defaults to now
-    #
-    # @return [Json] Returns a msg for the transaction and the status of the request
-    # @return msg explanation of outcome
-    def self.update(id, return_date=nil)
-      return_date ||= Time.new
-      post_update(id, { return_date: return_date })
+    # Override save method to post the information to Scout Metrics
+    def save
+      post_update(id, { signup_date: signup_date, return_date: return_date, active: active }))
+    end
+
+    # Posts signup date for this user (if it doesn't exist yet the "AppUser" will be created)
+    def signup(signup_date=nil)
+      self.signup_date = signup_date || Time.new
+      save
+    end
+
+    # Tells Scout Metrics the latest login date for this "AppUser"
+    def report_login(return_date=nil)
+      self.return_date = return_date || Time.new
+      save
     end
 
     # Activate an "AppUser" on Scout Metrics
     # (Should we also reset their signup_date & return_date?)
-    #
-    # @param id [Integer] Uniquely identifies user
-    #
-    # @return [Json] Returns a msg for the transaction and the status of the request
-    # @return msg explanation of outcome
-    def self.activate(id)
-      post_update(id, { active: true })
+    def activate
+      self.active = true
+      save
     end
 
     # Deactivate an "AppUser" on Scout Metrics
-    #
-    # @param id [Integer] Uniquely identifies user
-    #
-    # @return [Json] Returns a msg for the transaction and the status of the request
-    # @return msg explanation of outcome
-    def self.deactivate(id)
-      post_update(id, { active: false })
+    def deactivate
+      self.active = false
+      save
     end
 
     private
 
+    # @return [Json] Returns a msg for the transaction and the status of the request
+    # @return msg explanation of outcome
     def self.post_update(id, params)
       ScoutMetrics::Request.new(:put, "/app_users/#{id}", { app_user: params })
     end

@@ -2,43 +2,59 @@
   "use strict";
 
   var ScoutMetrics = {
-    accessToken: '6qPPlrlPYk5erffdy7cgig'
+    accessToken: '6qPPlrlPYk5erffdy7cgig',
     Request: {
       init: function() {
-        this.domain = 'https://scoutmetrics.com/api/v1'
+        this.api_domain = 'https://scoutmetrics.herokuapp.com/api/v1';
       },
-      send: function(method, route, data) {
+      send: function(method, route, data, callback) {
         var self = this;
+        var url = self.api_domain + route
+
         data['token'] = ScoutMetrics.accessToken;
         $.ajax({
-          url: self.domain + route,
+          url: self.api_domain + route,
           type: method,
-          data: data
+          data: data,
+          complete: function(response) {
+            callback(response, 'NOTHING');
+          }
         });
       }
     },
     User: {
-      create: function(params) {
-        params['signup_date'] || (params['signup_date'] = new Date());
-        Request.send('POST', '/app_users', { app_user: params });
+      create: function(id, signup_date, callback) {
+        signup_date || (signup_date = new Date());
+        this.postUpdate(id, { app_user: { signup_date: signup_date } }, callback);
       },
-      update: function(params) {
-        params['return_date'] || (params['return_date'] = new Date());
-        Request.send('POST', '/app_users', { app_user: params });
+      update: function(id, return_date, callback) {
+        return_date || (return_date = new Date());
+        this.postUpdate(id, { app_user: { return_date: return_date } }, callback);
+      },
+      activate: function(id, callback) {
+        this.postUpdate(id, { active: true }, callback);
+      },
+      deactivate: function(id, callback) {
+        this.postUpdate(id, { active: false }, callback);
+      },
+      postUpdate: function(id, params, callback) {
+        ScoutMetrics.Request.send('POST', '/app_users/' + id, params, callback);
       }
     },
     Engagement: {
-      create: function(params) {
-        Request.send('POST', '/engagements', { engagement: params });
+      create_category: function(name, callback) {
+        ScoutMetrics.Request.send('POST', '/engagements', { engagement: { name: name } }, callback);
       },
-      report: function(engagement_params, date_recorded) {
+      create: function(name, date_recorded, callback) {
         date_recorded || (date_recorded = new Date());
-        params = { engagement: engagement_params,
-                   engagement_instance: { date_recorded: date_recorded } };
-        Request.send('POST', '/engagements/add_instance', params);
+        var params = { engagement: { name: name },
+                       engagement_instance: { date_recorded: date_recorded } };
+        ScoutMetrics.Request.send('POST', '/engagements/add_instance', params, callback);
       }
     }
   };
+
+  ScoutMetrics.Request.init();
 
   window.ScoutMetrics = ScoutMetrics;
 

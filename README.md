@@ -13,7 +13,7 @@ Installation
   gem install scoutmetrics
 
   Or include it in your application,
-  gem 'scoutmetrics', '~> 0.0.2'
+  gem 'scoutmetrics', '~> 0.0.3'
 
 Usage
 ------------
@@ -27,17 +27,17 @@ end
 
 ### User API (found in `/lib/scoutmetrics/user.rb`)
 To tell us a user has signed up
-`ScoutMetrics::User.create(user.id)`
+`ScoutMetrics::User.find(user.id).signup`
 
 Or if you wanted to backfill signups
 ```ruby
 User.each do |user|
-  ScoutMetrics::User.create(user.id, user.created_at)
+  ScoutMetrics::User.create(id: user.id, signup_date: user.created_at, return_date: user.latest_login, active: user.active?)
 end
 ```
 
 To tell us about their latest login (so we can track retention for you)
-`ScoutMetrics::User.update(user.id)`
+`ScoutMetrics::User.find(user.id).report_login`
 
 ### Engagement API (found in `/lib/scoutmetrics/engagement.rb`)
 Tell us that one of your users commented on a post
