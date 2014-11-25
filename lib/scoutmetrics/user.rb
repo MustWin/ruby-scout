@@ -2,16 +2,23 @@ module ScoutMetrics
 
   class User
 
-    attr_accesor :id,  :signup_date, :return_date, :active
+    attr_accessor :id,  :signup_date, :return_date, :active
 
     # Create a User record with the id passed in for posting to Scout Metrics
     def self.find(id)
       new(id: id)
     end
 
+    def initialize(params)
+      self.id = params[:id]
+      self.signup_date = params[:signup_date]
+      self.return_date = params[:return_date]
+      self.active = params[:active]
+    end
+
     # Override save method to post the information to Scout Metrics
     def save
-      post_update(id, { signup_date: signup_date, return_date: return_date, active: active }))
+      post_update(id, { signup_date: signup_date, return_date: return_date, active: active })
     end
 
     # Posts signup date for this user (if it doesn't exist yet the "AppUser" will be created)
