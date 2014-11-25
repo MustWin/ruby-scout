@@ -50,7 +50,7 @@ module ScoutMetrics
 
     # @return [Json] Returns a msg for the transaction and the status of the request
     # @return msg explanation of outcome
-    def self.post_update(id, params)
+    def post_update(id, params)
       ScoutMetrics::Request.new(:put, "/app_users/#{id}", { app_user: params })
     end
 
