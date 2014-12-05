@@ -13,7 +13,7 @@ Installation
   gem install scoutmetrics
 
   Or include it in your application,
-  gem 'scoutmetrics', '~> 0.0.3'
+  gem 'scoutmetrics', '~> 0.1.0'
 
 Usage
 ------------
