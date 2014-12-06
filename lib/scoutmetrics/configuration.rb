@@ -3,7 +3,8 @@ module ScoutMetrics
   module Configuration
 
     VALID_OPTIONS_KEYS = [
-      :access_token
+      :access_token,
+      :environment
     ].freeze
 
     attr_accessor *VALID_OPTIONS_KEYS
