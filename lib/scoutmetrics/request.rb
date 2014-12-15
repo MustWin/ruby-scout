@@ -1,4 +1,5 @@
 require 'http'
+require 'timeout'
 
 module ScoutMetrics
 
@@ -14,7 +15,9 @@ module ScoutMetrics
       puts "ROUTE: #{route}"
       puts 'PARAMS'
       puts params
-      HTTP.send(method, route, json: params)
+      Timeout::timeout(5) do
+        HTTP.send(method, route, json: params)
+      end
     end
 
     def domain(environment=nil)

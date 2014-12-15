@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'scoutmetrics'
-  s.version = '0.1.1'
+  s.version = '0.1.2'
   s.date = '2014-10-20'
   s.summary = 'Ruby wrapper for the Scout Metrics API'
   s.description = 'Ruby wrapper for the Scout Metrics API'
