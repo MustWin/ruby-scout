@@ -18,7 +18,11 @@ module ScoutMetrics
 
     # Override save method to post the information to Scout Metrics
     def save
-      post_update(id, { signup_date: signup_date, return_date: return_date, active: active })
+      params = {}
+      params[:signup_date] = signup_date if field_present?(signup_date)
+      params[:return_date] = return_date if field_present?(return_date)
+      params[:active] = active if field_present?(active)
+      post_update(id, params)
     end
 
     # Posts signup date for this user (if it doesn't exist yet the "AppUser" will be created)
@@ -47,6 +51,14 @@ module ScoutMetrics
     end
 
     private
+
+    def field_blank?(field)
+      field.nil? || field.empty?
+    end
+
+    def field_present?(field)
+      !field_blank?(field)
+    end
 
     # @return [Json] Returns a msg for the transaction and the status of the request
     # @return msg explanation of outcome
